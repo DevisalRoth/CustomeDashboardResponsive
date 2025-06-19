@@ -106,9 +106,11 @@ class DashboardViewController: UIViewController {
         // Register all custom cell types with their reuse identifiers
         // Each cell type handles different content (header, metrics, features, etc.)
         collectionView.register(HeaderCell.self, forCellWithReuseIdentifier: HeaderCell.identifier)
-        collectionView.register(MetricCell.self, forCellWithReuseIdentifier: MetricCell.identifier)
+//        collectionView.register(MetricCell.self, forCellWithReuseIdentifier: MetricCell.identifier)
         collectionView.register(FeatureCell.self, forCellWithReuseIdentifier: FeatureCell.identifier)
         collectionView.register(SentUsageCell.self, forCellWithReuseIdentifier: SentUsageCell.identifier)
+        collectionView.register(UINib(nibName: "MetricCell", bundle: nil), forCellWithReuseIdentifier: MetricCell.identifier)
+
     }
     
     private func createLayout() -> UICollectionViewLayout {
@@ -264,7 +266,7 @@ class DashboardViewController: UIViewController {
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
         
         let section = NSCollectionLayoutSection(group: group)
-        section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 16, bottom: 20, trailing: 16)
+        section.contentInsets = NSDirectionalEdgeInsets(top: 20, leading: 16, bottom: 20, trailing: 16)
         return section
     }
     
@@ -328,33 +330,16 @@ class DashboardViewController: UIViewController {
             Item(title: "Sent Usages", subtitle: "View data has been sent via Telegram, SMS, and Email", value: nil, type: .sentUsage, colorType: nil)
         ], toSection: .sentUsages)
         
-        dataSource.apply(snapshot, animatingDifferences: false)
+        dataSource.apply(snapshot, animatingDifferences: true)
     }
 }
 
-// MARK: - Background Decoration View
-
-class BackgroundMetricsDecorationView: UICollectionReusableView {
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        backgroundColor = .white
-        layer.cornerRadius = 12
-        layer.shadowColor = UIColor.black.cgColor
-        layer.shadowOffset = CGSize(width: 0, height: 1)
-        layer.shadowRadius = 3
-        layer.shadowOpacity = 0.1
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-}
 
 class BackgroundFeatureDecorationView: UICollectionReusableView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = .systemGray4
-        layer.cornerRadius = 12
+        layer.cornerRadius = 20
         layer.shadowColor = UIColor.black.cgColor
         layer.shadowOffset = CGSize(width: 0, height: 1)
         layer.shadowRadius = 3
@@ -430,62 +415,6 @@ class HeaderCell: UICollectionViewCell {
     func configure(title: String, subtitle: String) {
         titleLabel.text = title
         subtitleLabel.text = subtitle
-    }
-}
-
-class MetricCell: UICollectionViewCell {
-    static let identifier = "MetricCell"
-    
-    private let titleLabel = UILabel()
-    private let valueLabel = UILabel()
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        setupViews()
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    private func setupViews() {
-        layer.cornerRadius = 8
-        
-        titleLabel.font = .systemFont(ofSize: 11)
-        titleLabel.textColor = .white
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        
-        valueLabel.font = .boldSystemFont(ofSize: 16)
-        valueLabel.textColor = .white
-        valueLabel.translatesAutoresizingMaskIntoConstraints = false
-        
-        addSubview(titleLabel)
-        addSubview(valueLabel)
-        
-        NSLayoutConstraint.activate([
-            titleLabel.topAnchor.constraint(equalTo: topAnchor, constant: 8),
-            titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 12),
-            titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12),
-            
-            valueLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 4),
-            valueLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 12),
-            valueLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12),
-            valueLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8)
-        ])
-    }
-    
-    func configure(title: String, value: String, colorType: DashboardViewController.Item.ColorType) {
-        titleLabel.text = title
-        valueLabel.text = value
-        
-        switch colorType {
-        case .gray:
-            backgroundColor = .systemGray4
-        case .blue:
-            backgroundColor = .systemBlue
-        case .green:
-            backgroundColor = .systemGreen
-        }
     }
 }
 
@@ -693,6 +622,85 @@ class SentUsageCell: UICollectionViewCell {
 //        if percentage >= 1.0 {
 //            displayLink?.invalidate()
 //            displayLink = nil
+//        }
+//    }
+//}
+
+
+
+// MARK: - Background Decoration View
+
+//class BackgroundMetricsDecorationView: UICollectionReusableView {createMetricsSection(environment
+//    override init(frame: CGRect) {
+//        super.init(frame: frame)
+//        backgroundColor = .white
+//        layer.cornerRadius = 20
+//        layer.shadowColor = UIColor.black.cgColor
+//        layer.shadowOffset = CGSize(width: 0, height: 1)
+//        layer.shadowRadius = 3
+//        layer.shadowOpacity = 0.1
+//    }
+//
+//    required init?(coder: NSCoder) {
+//        fatalError("init(coder:) has not been implemented")
+//    }
+//}
+
+
+
+
+//class MetricCell: UICollectionViewCell {
+//    static let identifier = "MetricCell"
+//
+//    private let titleLabel = UILabel()
+//    private let valueLabel = UILabel()
+//
+//    override init(frame: CGRect) {
+//        super.init(frame: frame)
+//        setupViews()
+//    }
+//
+//    required init?(coder: NSCoder) {
+//        fatalError("init(coder:) has not been implemented")
+//    }
+//
+//    private func setupViews() {
+//        layer.cornerRadius = 8
+//
+//        titleLabel.font = .systemFont(ofSize: 11)
+//        titleLabel.textColor = .white
+//        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+//
+//        valueLabel.font = .boldSystemFont(ofSize: 16)
+//        valueLabel.textColor = .white
+//        valueLabel.translatesAutoresizingMaskIntoConstraints = false
+//
+//        addSubview(titleLabel)
+//        addSubview(valueLabel)
+//
+//        NSLayoutConstraint.activate([
+//            titleLabel.topAnchor.constraint(equalTo: topAnchor, constant: 8),
+//            titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 12),
+//            titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12),
+//
+//            valueLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 4),
+//            valueLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 12),
+//            valueLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12),
+//            valueLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8)
+//        ])
+//    }
+//
+//    func configure(title: String, value: String, colorType: DashboardViewController.Item.ColorType) {
+//        titleLabel.text = title
+//        valueLabel.text = value
+//
+//        switch colorType {
+//        case .gray:
+//            backgroundColor = .systemGray4
+//        case .blue:
+//            backgroundColor = .systemBlue
+//        case .green:
+//            backgroundColor = .systemGreen
 //        }
 //    }
 //}
